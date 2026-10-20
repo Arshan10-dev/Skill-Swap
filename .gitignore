@@ -6,3 +6,4 @@ target/
 .vscode/
 launch-video/frames/
 .DS_Store
+.env
