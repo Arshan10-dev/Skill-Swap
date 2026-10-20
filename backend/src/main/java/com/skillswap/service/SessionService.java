@@ -23,7 +23,7 @@ public class SessionService {
     private final UserLookup lookup;
 
     public SessionService(SkillSessionRepository sessions, SwapRequestRepository requests, ReviewRepository reviews,
-                          NotificationService notifications, ReputationService reputation, UserLookup lookup) {
+            NotificationService notifications, ReputationService reputation, UserLookup lookup) {
         this.sessions = sessions;
         this.requests = requests;
         this.reviews = reviews;
@@ -35,7 +35,8 @@ public class SessionService {
     @Transactional
     public SessionDto schedule(Long me, SessionCreate in) {
         SwapRequest r = requests.findById(in.requestId()).orElseThrow(() -> ApiException.notFound("Request"));
-        if (!r.involves(me)) throw ApiException.forbidden("Not your exchange");
+        if (!r.involves(me))
+            throw ApiException.forbidden("Not your exchange");
         if (r.getStatus() != Enums.RequestStatus.ACCEPTED)
             throw ApiException.bad("Sessions can be scheduled only for accepted exchanges");
         SkillSession s = new SkillSession();
@@ -57,16 +58,22 @@ public class SessionService {
     @Transactional
     public SessionDto update(Long me, Long id, SessionUpdate in) {
         SkillSession s = mine(me, id);
-        if (s.getStatus() != Enums.SessionStatus.SCHEDULED) throw ApiException.bad("Only scheduled sessions can be edited");
+        if (s.getStatus() != Enums.SessionStatus.SCHEDULED)
+            throw ApiException.bad("Only scheduled sessions can be edited");
         if (in.scheduledAt() != null) {
-            if (in.scheduledAt().isBefore(LocalDateTime.now())) throw ApiException.bad("Pick a time in the future");
+            if (in.scheduledAt().isBefore(LocalDateTime.now()))
+                throw ApiException.bad("Pick a time in the future");
             s.setScheduledAt(in.scheduledAt());
             s.setReminderSent(false);
         }
-        if (in.durationMinutes() != null) s.setDurationMinutes(in.durationMinutes());
-        if (in.mode() != null) s.setMode(in.mode());
-        if (in.locationOrLink() != null) s.setLocationOrLink(in.locationOrLink());
-        if (in.notes() != null) s.setNotes(in.notes());
+        if (in.durationMinutes() != null)
+            s.setDurationMinutes(in.durationMinutes());
+        if (in.mode() != null)
+            s.setMode(in.mode());
+        if (in.locationOrLink() != null)
+            s.setLocationOrLink(in.locationOrLink());
+        if (in.notes() != null)
+            s.setNotes(in.notes());
         notifications.notify(s.getSwapRequest().other(me), Enums.NotificationType.SESSION,
                 "\"" + s.getTitle() + "\" was rescheduled to " + FMT.format(s.getScheduledAt()), "/sessions");
         return toDto(s, me);
@@ -75,7 +82,8 @@ public class SessionService {
     @Transactional
     public SessionDto complete(Long me, Long id) {
         SkillSession s = mine(me, id);
-        if (s.getStatus() != Enums.SessionStatus.SCHEDULED) throw ApiException.bad("Session is not open");
+        if (s.getStatus() != Enums.SessionStatus.SCHEDULED)
+            throw ApiException.bad("Session is not open");
         if (s.getScheduledAt().isAfter(LocalDateTime.now()))
             throw ApiException.bad("A session can be marked complete only after its start time");
         s.setStatus(Enums.SessionStatus.COMPLETED);
@@ -95,7 +103,10 @@ public class SessionService {
     @Transactional
     public SessionDto cancel(Long me, Long id) {
         SkillSession s = mine(me, id);
-        if (s.getStatus() != Enums.SessionStatus.SCHEDULED) throw ApiException.bad("Session is not open");
+        System.out.println("Scheduled time: " + s.getScheduledAt());
+        System.out.println("Backend current time: " + LocalDateTime.now());
+        if (s.getStatus() != Enums.SessionStatus.SCHEDULED)
+            throw ApiException.bad("Session is not open");
         s.setStatus(Enums.SessionStatus.CANCELLED);
         notifications.notify(s.getSwapRequest().other(me), Enums.NotificationType.SESSION,
                 "\"" + s.getTitle() + "\" was cancelled", "/sessions");
@@ -110,11 +121,15 @@ public class SessionService {
     @Transactional(readOnly = true)
     public List<SessionDto> forRequest(Long me, Long requestId) {
         SwapRequest r = requests.findById(requestId).orElseThrow(() -> ApiException.notFound("Request"));
-        if (!r.involves(me)) throw ApiException.forbidden("Not your exchange");
+        if (!r.involves(me))
+            throw ApiException.forbidden("Not your exchange");
         return sessions.findBySwapRequestIdOrderByScheduledAtDesc(requestId).stream().map(s -> toDto(s, me)).toList();
     }
 
-    /** Sends a reminder roughly one hour before each scheduled session. Runs every 5 minutes. */
+    /**
+     * Sends a reminder roughly one hour before each scheduled session. Runs every 5
+     * minutes.
+     */
     @Scheduled(fixedDelay = 300_000, initialDelay = 30_000)
     @Transactional
     public void sendReminders() {
@@ -130,7 +145,8 @@ public class SessionService {
 
     SkillSession mine(Long me, Long id) {
         SkillSession s = sessions.findById(id).orElseThrow(() -> ApiException.notFound("Session"));
-        if (!s.getSwapRequest().involves(me)) throw ApiException.forbidden("Not your session");
+        if (!s.getSwapRequest().involves(me))
+            throw ApiException.forbidden("Not your session");
         return s;
     }
 
