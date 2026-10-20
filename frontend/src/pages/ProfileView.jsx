@@ -1,6 +1,31 @@
 import Avatar from '../components/Avatar.jsx';
 import { Stars, fmtDay, levelLabel, timeAgo, Empty } from '../components/ui.jsx';
-
+const DEMO_REVIEWS = [
+  {
+    id: 'demo-1',
+    reviewer: { name: 'Priya Sharma' },
+    rating: 5,
+    createdAt: '2026-10-18T10:00:00',
+    sessionTitle: 'Java Programming',
+    comment: 'Excellent teaching! The concepts were explained very clearly.',
+  },
+  {
+    id: 'demo-2',
+    reviewer: { name: 'Arjun Patel' },
+    rating: 4,
+    createdAt: '2026-10-16T12:00:00',
+    sessionTitle: 'Web Development',
+    comment: 'Very helpful session. I learned many new things.',
+  },
+  {
+    id: 'demo-3',
+    reviewer: { name: 'Neha Verma' },
+    rating: 5,
+    createdAt: '2026-10-14T09:00:00',
+    sessionTitle: 'React Fundamentals',
+    comment: 'Great experience. Everything was easy to understand.',
+  },
+];
 const badgeIcon = {
   FIRST_SWAP: 'flag', REGULAR: 'arrow-repeat', VETERAN: 'trophy', FIVE_STAR: 'star', TOP_RATED: 'gem',
   MULTI_TALENT: 'lightning', FEEDBACK_HERO: 'chat-heart', TRUSTED: 'shield-check',
@@ -18,7 +43,11 @@ export default function ProfileView({ p, reviews, actions }) {
             <div className="small mb-2">
               <i className="bi bi-geo-alt me-1" />{p.location || 'Location not set'} · Member since {fmtDay(p.memberSince)}
             </div>
-            <Stars value={p.averageRating} />
+            <Stars value={displayRating} />
+            <div className="small text-muted mt-1">
+              {Number(displayRating || 0).toFixed(1)} / 5 · {displayReviewCount} reviews
+              {reviews.length === 0 && ' · Demo'}
+            </div>
           </div>
           <div className="d-flex gap-4">
             <div className="hero-stat"><div className="v">{p.reputation}</div><div className="l">Reputation</div></div>
@@ -50,8 +79,15 @@ export default function ProfileView({ p, reviews, actions }) {
             ))}</div>
           </div>
           <div className="card">
-            <div className="card-pad pb-2"><h6 className="mb-0">Reviews ({reviews.length})</h6></div>
-            {reviews.length === 0 ? <Empty icon="chat-square-quote" title="No reviews yet" /> : reviews.map((r) => (
+            <div className="card-pad pb-2">
+              <h6 className="mb-0">
+                Reviews ({displayReviewCount})
+                {reviews.length === 0 && (
+                  <span className="small text-muted ms-2">Demo</span>
+                )}
+              </h6>
+            </div>
+            {displayReviews.map((r) => (
               <div className="list-row align-items-start" key={r.id}>
                 <Avatar name={r.reviewer.name} size={38} />
                 <div className="flex-grow-1">
