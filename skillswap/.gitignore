@@ -1,0 +1,8 @@
+node_modules/
+dist/
+target/
+.idea/
+*.iml
+.vscode/
+launch-video/frames/
+.DS_Store

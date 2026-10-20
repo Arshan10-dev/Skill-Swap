@@ -1,0 +1,307 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SkillSwap launch film</title>
+<link rel="stylesheet" href="bi/bootstrap-icons.min.css">
+<style>
+@font-face{font-family:PJS;font-weight:400;src:url(fonts/plus-jakarta-sans-latin-400-normal.woff2)}
+@font-face{font-family:PJS;font-weight:500;src:url(fonts/plus-jakarta-sans-latin-500-normal.woff2)}
+@font-face{font-family:PJS;font-weight:600;src:url(fonts/plus-jakarta-sans-latin-600-normal.woff2)}
+@font-face{font-family:PJS;font-weight:700;src:url(fonts/plus-jakarta-sans-latin-700-normal.woff2)}
+@font-face{font-family:PJS;font-weight:800;src:url(fonts/plus-jakarta-sans-latin-800-normal.woff2)}
+:root{--ink:#1E1B4B;--ink2:#312E81;--coral:#FF7A59;--indigo:#6366F1;--lav:#A5B4FC;--mint:#10B981;--paper:#F6F7FB}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--ink)}
+body{font-family:PJS,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+#stage{position:absolute;inset:0;overflow:hidden;background:var(--ink)}
+.layer{position:absolute;inset:0}
+.glow{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55}
+.dots{position:absolute;inset:-200px;background-image:radial-gradient(rgba(165,180,252,.18) 1.5px,transparent 1.5px);background-size:44px 44px}
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.big{font-size:118px;font-weight:800;letter-spacing:-.045em;line-height:1.02}
+.mid{font-size:84px;font-weight:800;letter-spacing:-.04em;line-height:1.05}
+.w{display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .02em .06em}
+.w>i{display:inline-block;font-style:normal}
+.coral{color:var(--coral)}.lav{color:var(--lav)}
+.chip{position:absolute;padding:16px 30px;border-radius:999px;font-weight:700;font-size:30px;white-space:nowrap;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.t{background:#E7F8F1;color:#047857}.l{background:#FFF1EC;color:#C2410C}.n{background:rgba(255,255,255,.1);color:#E0E7FF;border:1px solid rgba(255,255,255,.18)}
+.pain{position:absolute;left:50%;width:880px;margin-left:-440px;height:120px;border-radius:26px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:30px;padding:0 44px;font-size:44px;font-weight:700;color:#E0E7FF}
+.pain i{font-size:46px;color:var(--coral)}
+.pain .strike{position:absolute;left:36px;right:36px;top:50%;height:6px;border-radius:6px;background:var(--coral);transform-origin:left center}
+.logo{display:flex;align-items:center;gap:34px}
+.logo img{width:150px;height:150px}
+.logo span{font-size:150px;font-weight:600;letter-spacing:-.045em}
+.logo b{font-weight:800;color:var(--coral)}
+.browser{position:absolute;width:1440px;height:948px;border-radius:22px;overflow:hidden;background:#fff;box-shadow:0 60px 140px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08)}
+.browser .bar{position:relative;z-index:5;height:48px;background:#EEF0F6;display:flex;align-items:center;gap:10px;padding:0 20px}
+.browser .bar b{width:14px;height:14px;border-radius:50%;background:#FF5F57}.browser .bar b:nth-child(2){background:#FEBC2E}.browser .bar b:nth-child(3){background:#28C840}
+.browser .bar span{margin-left:24px;flex:0 0 520px;height:28px;border-radius:8px;background:#fff;color:#6B7090;font-size:16px;display:flex;align-items:center;padding-left:14px;font-weight:500}
+.browser .shot{position:absolute;top:48px;left:0;width:1440px;height:900px;transform-origin:0 0}
+.browser .shot img{width:1440px;height:900px;display:block}
+.caption{position:absolute;left:120px;width:520px}
+.kicker{font-size:22px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--coral);margin-bottom:22px}
+.caption h2{font-size:68px;font-weight:800;letter-spacing:-.04em;line-height:1.04}
+.caption p{font-size:28px;line-height:1.45;color:#C7D2FE;margin-top:24px;font-weight:500}
+.hl{position:absolute;border:4px solid var(--coral);border-radius:22px;box-shadow:0 0 0 8px rgba(255,122,89,.18),0 0 60px rgba(255,122,89,.45)}
+.cursor{position:absolute;width:46px;height:46px;z-index:30;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.ripple{position:absolute;width:90px;height:90px;margin:-45px 0 0 -45px;border-radius:50%;border:4px solid #fff;z-index:29}
+.toast{position:absolute;display:flex;align-items:center;gap:20px;padding:24px 34px;border-radius:22px;background:#fff;color:var(--ink);font-size:28px;font-weight:700;box-shadow:0 30px 80px rgba(0,0,0,.35);z-index:31}
+.toast .av{width:56px;height:56px;border-radius:50%;background:#FF7A59;color:#fff;display:grid;place-items:center;font-size:22px;font-weight:800}
+.toast small{display:block;font-size:20px;color:#6B7090;font-weight:500;margin-top:2px}
+.tile{position:absolute;width:400px;height:300px;border-radius:30px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:40px}
+.tile .ic{width:84px;height:84px;border-radius:22px;display:grid;place-items:center;font-size:42px;margin-bottom:30px}
+.tile h3{font-size:36px;font-weight:800;letter-spacing:-.03em}
+.tile p{font-size:22px;color:#C7D2FE;margin-top:12px;line-height:1.4;font-weight:500}
+.stack{position:absolute;font-size:28px;font-weight:600;color:var(--lav);letter-spacing:.06em}
+.pill{display:inline-block;padding:10px 22px;border-radius:999px;border:1px solid rgba(165,180,252,.35);margin:0 8px}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:50}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="layer" id="bg">
+    <div class="dots" id="dots"></div>
+    <div class="glow" id="g1" style="width:900px;height:900px;left:-250px;top:-300px;background:#4338CA"></div>
+    <div class="glow" id="g2" style="width:800px;height:800px;right:-260px;bottom:-320px;background:#FF7A59;opacity:.35"></div>
+  </div>
+
+  <!-- S1: everyone knows something -->
+  <div class="layer" id="s1">
+    <div class="center">
+      <div class="big" id="s1a"><span class="w"><i>Everyone</i></span> <span class="w"><i>knows</i></span> <span class="w"><i>something</i></span></div>
+      <div class="big coral" id="s1b"><span class="w"><i>worth</i></span> <span class="w"><i>teaching.</i></span></div>
+    </div>
+    <div class="chip t" style="left:150px;top:150px">Java</div>
+    <div class="chip l" style="left:1420px;top:120px">Guitar</div>
+    <div class="chip n" style="left:110px;top:800px">Public Speaking</div>
+    <div class="chip t" style="left:1500px;top:830px">Figma</div>
+    <div class="chip l" style="left:760px;top:90px">Urdu</div>
+    <div class="chip n" style="left:840px;top:900px">Chess</div>
+    <div class="chip t" style="left:90px;top:300px">Piano</div>
+    <div class="chip l" style="left:1580px;top:310px">Python</div>
+  </div>
+
+  <!-- S2: the pain -->
+  <div class="layer" id="s2">
+    <div class="mid" style="position:absolute;top:150px;width:100%;text-align:center" id="s2t">
+      <span class="w"><i>But</i></span> <span class="w"><i>learning</i></span> <span class="w"><i>is</i></span> <span class="w"><i>still</i></span> <span class="w"><i class="coral">one-way.</i></span>
+    </div>
+    <div class="pain" style="top:430px"><i class="bi bi-currency-rupee"></i>Expensive paid courses<div class="strike"></div></div>
+    <div class="pain" style="top:580px"><i class="bi bi-play-btn"></i>Videos that can't answer back<div class="strike"></div></div>
+    <div class="pain" style="top:730px"><i class="bi bi-person-x"></i>No one to practise with<div class="strike"></div></div>
+  </div>
+
+  <!-- S3a: meet skillswap -->
+  <div class="layer" id="s3a">
+    <div class="center">
+      <div class="kicker" id="meet" style="font-size:30px">Meet</div>
+      <div class="logo" id="logo1"><img src="logo.svg"><span>Skill<b>Swap</b></span></div>
+      <div id="sub1" style="font-size:36px;color:#C7D2FE;margin-top:30px;font-weight:500">Swap skills, one-on-one.</div>
+    </div>
+  </div>
+
+  <!-- S3b: product -->
+  <div class="layer" id="s3b">
+    <div class="caption" id="cap1" style="top:340px">
+      <div class="kicker">Smart matching</div>
+      <h2>Find your perfect swap partner.</h2>
+      <p>A compatibility score from skills, level and availability.</p>
+    </div>
+    <div class="caption" id="cap2" style="top:340px">
+      <div class="kicker">Chat</div>
+      <h2>Talk it through.</h2>
+      <p>Chat opens the moment your request is accepted.</p>
+    </div>
+    <div class="caption" id="cap3" style="top:340px">
+      <div class="kicker">Sessions</div>
+      <h2>Schedule. Learn. Repeat.</h2>
+      <p>Online or in person, with reminders and full history.</p>
+    </div>
+    <div class="browser" id="br" style="left:760px;top:66px">
+      <div class="bar"><b></b><b></b><b></b><span id="url">skillswap.app/matches</span></div>
+      <div class="shot" id="shotA"><img src="caps/matches.png"></div>
+      <div class="shot" id="shotB"><img src="caps/chat.png"></div>
+      <div class="shot" id="shotC"><img src="caps/sessions.png"></div>
+      <div class="hl" id="hl"></div>
+    </div>
+    <div class="ripple" id="rip"></div>
+    <svg class="cursor" id="cur" viewBox="0 0 24 24"><path d="M4 2l16 9.5-7 1.6 4 7.4-3 1.5-4-7.4L5 19z" fill="#fff" stroke="#1E1B4B" stroke-width="1.4" stroke-linejoin="round"/></svg>
+    <div class="toast" id="toast"><div class="av">KM</div><div>Kabir accepted your request<small>You're now swap partners · 77% match</small></div></div>
+  </div>
+
+  <!-- S4: trust -->
+  <div class="layer" id="s4">
+    <div class="mid" style="position:absolute;top:130px;width:100%;text-align:center" id="s4t">
+      <span class="w"><i>Built</i></span> <span class="w"><i>on</i></span> <span class="w"><i class="coral">trust.</i></span>
+    </div>
+    <div class="tile" style="left:110px;top:430px"><div class="ic" style="background:#FEF5E3;color:#D97706"><i class="bi bi-star-fill"></i></div><h3>Ratings & reviews</h3><p>Rate every partner after each session.</p></div>
+    <div class="tile" style="left:550px;top:430px"><div class="ic" style="background:#EEF0FF;color:#6366F1"><i class="bi bi-award-fill"></i></div><h3>Reputation & badges</h3><p><span id="rep">+0</span> reputation per completed session.</p></div>
+    <div class="tile" style="left:990px;top:430px"><div class="ic" style="background:#FFF1EC;color:#FF7A59"><i class="bi bi-shield-fill-check"></i></div><h3>Report & block</h3><p>Stay safe with one-tap moderation tools.</p></div>
+    <div class="tile" style="left:1430px;top:430px"><div class="ic" style="background:#E7F8F1;color:#10B981"><i class="bi bi-bar-chart-fill"></i></div><h3>Admin analytics</h3><p>Users, skills, reports and activity in one dashboard.</p></div>
+  </div>
+
+  <!-- S5: logo reveal -->
+  <div class="layer" id="s5">
+    <div class="center">
+      <svg id="mark" width="220" height="220" viewBox="0 0 64 64">
+        <rect id="mrect" width="64" height="64" rx="16" fill="#312E81"/>
+        <g id="arrA"><path d="M18 26a10 10 0 0 1 18-6l4-4v12H28l4-4a6 6 0 0 0-10 2z" fill="#FF7A59"/></g>
+        <g id="arrB"><path d="M46 38a10 10 0 0 1-18 6l-4 4V36h12l-4 4a6 6 0 0 0 10-2z" fill="#A5B4FC"/></g>
+      </svg>
+      <div class="logo" id="word" style="margin-top:36px"><span style="font-size:130px">Skill<b>Swap</b></span></div>
+      <div class="mid" id="tag" style="font-size:48px;margin-top:26px;font-weight:700;letter-spacing:-.02em">
+        <span class="w"><i>Teach</i></span> <span class="w"><i>what</i></span> <span class="w"><i>you</i></span> <span class="w"><i>know.</i></span>
+        <span class="w"><i class="coral">Learn</i></span> <span class="w"><i class="coral">what</i></span> <span class="w"><i class="coral">you</i></span> <span class="w"><i class="coral">don't.</i></span>
+      </div>
+      <div class="stack" id="stack" style="position:static;margin-top:56px"><span class="pill">React</span><span class="pill">Spring Boot</span><span class="pill">MySQL</span></div>
+    </div>
+  </div>
+  <div class="flash" id="flash"></div>
+</div>
+
+<script src="gsap.min.js"></script>
+<script>
+const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
+const SFX = []; const sfx = (t, type, gain = 1) => SFX.push({ t, type, gain });
+const tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
+gsap.set(['#s2', '#s3a', '#s3b', '#s4', '#s5'], { autoAlpha: 0 });
+
+// ambient background drift across the whole film
+tl.fromTo('#dots', { x: 0, y: 0 }, { x: -120, y: -60, duration: 30, ease: 'none' }, 0);
+tl.fromTo('#g1', { x: 0, y: 0 }, { x: 260, y: 160, duration: 30, ease: 'sine.inOut' }, 0);
+tl.fromTo('#g2', { x: 0, y: 0 }, { x: -300, y: -120, duration: 30, ease: 'sine.inOut' }, 0);
+
+// ---------- S1 (0 - 5.2) ----------
+const s1w = $$('#s1a .w i'), s1b = $$('#s1b .w i');
+tl.from(s1w, { yPercent: 110, duration: 0.9, stagger: 0.28 }, 0.35);
+s1w.forEach((_, i) => sfx(0.38 + i * 0.28, 'tick'));
+tl.from(s1b, { yPercent: 110, duration: 0.9, stagger: 0.22 }, 1.55);
+sfx(1.6, 'pop', 1.1);
+const chips = $$('#s1 .chip');
+chips.forEach((c, i) => {
+  const t = 2.2 + i * 0.18;
+  tl.fromTo(c, { scale: 0, rotation: gsap.utils.random(-14, 14, 1), autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.8, ease: 'back.out(2.2)' }, t);
+  tl.to(c, { y: (i % 2 ? -1 : 1) * 26, x: (i % 3 - 1) * 18, duration: 3, ease: 'sine.inOut' }, t + 0.6);
+  sfx(t, 'bubble', 0.55);
+});
+tl.to('#s1 .center', { scale: 1.06, duration: 4.4, ease: 'none' }, 0.6);
+tl.to(chips, { scale: 0, autoAlpha: 0, duration: 0.45, ease: 'back.in(2)', stagger: 0.03 }, 4.7);
+tl.to('#s1 .center', { yPercent: -18, autoAlpha: 0, filter: 'blur(14px)', duration: 0.6, ease: 'power3.in' }, 4.75);
+sfx(4.75, 'whoosh');
+
+// ---------- S2 (5.3 - 10) ----------
+tl.set('#s2', { autoAlpha: 1 }, 5.3);
+const s2w = $$('#s2t .w i');
+tl.from(s2w, { yPercent: 110, duration: 0.8, stagger: 0.16 }, 5.35);
+s2w.forEach((_, i) => sfx(5.38 + i * 0.16, 'tick', 0.8));
+$$('#s2 .pain').forEach((p, i) => {
+  const t = 6.5 + i * 0.55;
+  tl.from(p, { x: i % 2 ? 120 : -120, autoAlpha: 0, duration: 0.8 }, t);
+  sfx(t, 'pop', 0.7);
+  tl.fromTo(p.querySelector('.strike'), { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: 'power3.inOut' }, 8.0 + i * 0.28);
+  tl.to(p, { opacity: 0.5, duration: 0.3 }, 8.3 + i * 0.28);
+  sfx(8.0 + i * 0.28, 'strike', 0.8);
+});
+tl.to('#s2', { scale: 0.92, autoAlpha: 0, filter: 'blur(12px)', duration: 0.55, ease: 'power3.in' }, 9.45);
+sfx(9.5, 'whoosh');
+
+// ---------- S3a meet (10 - 11.9) ----------
+tl.set('#s3a', { autoAlpha: 1 }, 10.0);
+tl.fromTo('#flash', { opacity: 0.0 }, { opacity: 0.0, duration: 0.01 }, 10.0);
+tl.from('#meet', { y: 30, autoAlpha: 0, duration: 0.6 }, 10.05);
+tl.from('#logo1 img', { scale: 0, rotation: -200, duration: 1.1, ease: 'back.out(1.6)' }, 10.25);
+tl.from('#logo1 span', { x: -60, autoAlpha: 0, clipPath: 'inset(0 100% 0 0)', duration: 0.9, ease: 'expo.out' }, 10.55);
+tl.from('#sub1', { y: 24, autoAlpha: 0, duration: 0.7 }, 10.95);
+sfx(10.25, 'chime', 1.0);
+tl.to('#s3a', { scale: 1.4, autoAlpha: 0, filter: 'blur(16px)', duration: 0.6, ease: 'power3.in' }, 11.55);
+sfx(11.6, 'whoosh');
+
+// ---------- S3b product (12 - 21.4) ----------
+tl.set('#s3b', { autoAlpha: 1 }, 12.0);
+gsap.set(['#shotB', '#shotC'], { autoAlpha: 0 });
+gsap.set(['#cap2', '#cap3', '#toast', '#rip'], { autoAlpha: 0 });
+gsap.set('#hl', { left: 0.2 * 1440 * 1.0, top: 0, autoAlpha: 0 });
+tl.fromTo('#br', { y: 700, rotationX: 28, rotationY: -12, scale: 0.85, transformPerspective: 2400 },
+  { y: 0, rotationX: 0, rotationY: 0, scale: 1, duration: 1.3, ease: 'expo.out' }, 12.0);
+sfx(12.05, 'whoosh', 0.7);
+tl.from($$('#cap1 > *'), { y: 40, autoAlpha: 0, duration: 0.8, stagger: 0.12 }, 12.3);
+sfx(12.35, 'tick', 0.8);
+// camera push towards the top match (Kabir card at ~ x200-450, y185-470 in 1440 space)
+tl.to('#shotA', { scale: 1.55, x: -5, y: -280, duration: 1.6, ease: 'power3.inOut' }, 13.2);
+tl.fromTo('#hl', { left: -5 + 288 * 1.55 - 6, top: 48 - 280 + 268 * 1.55 - 6, width: 360 * 1.55 + 12, height: 407 * 1.55 + 12, autoAlpha: 0, scale: 1.08 },
+  { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(2)' }, 14.6);
+sfx(14.6, 'pop', 0.8);
+// cursor to "Request swap" (in 1440 space: x~376,y~444 -> pushed)
+const bx = 760, by = 66;
+const rx = bx - 5 + 541 * 1.55, ry = by + 48 - 280 + 640 * 1.55;
+tl.fromTo('#cur', { left: 1880, top: 1000, autoAlpha: 0 }, { left: rx, top: ry, autoAlpha: 1, duration: 1.0, ease: 'power3.inOut' }, 14.7);
+tl.to('#cur', { scale: 0.82, duration: 0.09, yoyo: true, repeat: 1, ease: 'power1.inOut' }, 15.75);
+tl.fromTo('#rip', { left: rx + 6, top: ry + 6, scale: 0.2, autoAlpha: 1 }, { scale: 1.6, autoAlpha: 0, duration: 0.6, ease: 'power2.out' }, 15.78);
+sfx(15.78, 'click', 1.1);
+tl.fromTo('#toast', { left: 1180, top: 960, y: 120, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.7, ease: 'back.out(1.6)' }, 16.15);
+sfx(16.15, 'chime', 0.75);
+tl.to(['#cur', '#hl'], { autoAlpha: 0, duration: 0.3 }, 16.6);
+// -> chat
+tl.to('#toast', { y: 120, autoAlpha: 0, duration: 0.4, ease: 'power3.in' }, 17.25);
+tl.to($$('#cap1 > *'), { y: -30, autoAlpha: 0, duration: 0.4, stagger: 0.05, ease: 'power3.in' }, 17.25);
+tl.set('#url', { textContent: 'skillswap.app/chat' }, 17.55);
+tl.fromTo('#shotB', { autoAlpha: 0, scale: 1.0, x: -300, y: 0 }, { autoAlpha: 1, duration: 0.45, ease: 'power2.out' }, 17.5);
+tl.to('#shotB', { scale: 1.12, x: -420, y: -70, duration: 2.6, ease: 'power2.inOut' }, 17.8);
+tl.set('#cap2', { autoAlpha: 1 }, 17.6);
+tl.set('#shotA', { autoAlpha: 0 }, 17.96);
+tl.from($$('#cap2 > *'), { y: 40, autoAlpha: 0, duration: 0.8, stagger: 0.12 }, 17.6);
+sfx(17.55, 'whoosh', 0.6); sfx(17.7, 'tick', 0.8);
+// -> sessions
+tl.to($$('#cap2 > *'), { y: -30, autoAlpha: 0, duration: 0.4, stagger: 0.05, ease: 'power3.in' }, 19.95);
+tl.set('#url', { textContent: 'skillswap.app/sessions' }, 20.3);
+tl.fromTo('#shotC', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.45 }, 20.25);
+tl.fromTo('#shotC', { scale: 1.2, x: -300, y: -20 }, { scale: 1.32, x: -380, y: -50, duration: 2.6, ease: 'power1.inOut' }, 20.25);
+tl.set('#cap3', { autoAlpha: 1 }, 20.35);
+tl.set('#shotB', { autoAlpha: 0 }, 20.71);
+tl.from($$('#cap3 > *'), { y: 40, autoAlpha: 0, duration: 0.8, stagger: 0.12 }, 20.35);
+sfx(20.3, 'whoosh', 0.6); sfx(20.45, 'tick', 0.8);
+tl.to('#s3b', { autoAlpha: 0, scale: 0.94, filter: 'blur(10px)', duration: 0.55, ease: 'power3.in' }, 22.6);
+sfx(22.65, 'whoosh');
+
+// ---------- S4 trust (23.1 - 27.4) ----------
+tl.set('#s4', { autoAlpha: 1 }, 23.1);
+const s4w = $$('#s4t .w i');
+tl.from(s4w, { yPercent: 110, duration: 0.8, stagger: 0.18 }, 23.15);
+s4w.forEach((_, i) => sfx(23.18 + i * 0.18, 'tick', 0.8));
+$$('#s4 .tile').forEach((t, i) => {
+  const at = 23.75 + i * 0.32;
+  tl.from(t, { y: 140, autoAlpha: 0, rotationX: -35, transformPerspective: 1400, duration: 0.9, ease: 'back.out(1.4)' }, at);
+  tl.from(t.querySelector('.ic'), { scale: 0, rotation: -90, duration: 0.7, ease: 'back.out(2.4)' }, at + 0.2);
+  sfx(at, 'bubble', 0.75);
+});
+const rep = { v: 0 };
+tl.to(rep, { v: 20, duration: 1.0, ease: 'power2.out', onUpdate: () => { $('#rep').textContent = '+' + Math.round(rep.v); } }, 24.5);
+tl.to('#s4', { scale: 1.05, duration: 4, ease: 'none' }, 23.2);
+tl.to('#s4', { autoAlpha: 0, filter: 'blur(12px)', duration: 0.5, ease: 'power3.in' }, 26.9);
+sfx(26.95, 'whoosh');
+
+// ---------- S5 logo (27.4 - 32) ----------
+tl.set('#s5', { autoAlpha: 1 }, 27.4);
+tl.from('#mrect', { scale: 0, transformOrigin: '50% 50%', duration: 0.8, ease: 'back.out(1.8)' }, 27.45);
+tl.from('#arrA', { x: -40, y: -30, rotation: -180, autoAlpha: 0, transformOrigin: '50% 50%', duration: 1.0, ease: 'expo.out' }, 27.65);
+tl.from('#arrB', { x: 40, y: 30, rotation: -180, autoAlpha: 0, transformOrigin: '50% 50%', duration: 1.0, ease: 'expo.out' }, 27.75);
+sfx(27.45, 'chime', 1.1);
+tl.from('#word span', { y: 60, autoAlpha: 0, clipPath: 'inset(0 0 100% 0)', duration: 0.9 }, 28.15);
+sfx(28.15, 'whoosh', 0.5);
+const tg = $$('#tag .w i');
+tl.from(tg, { yPercent: 110, duration: 0.7, stagger: 0.09 }, 28.7);
+sfx(28.7, 'tick', 0.6); sfx(29.06, 'tick', 0.6);
+tl.from($$('#stack .pill'), { y: 30, autoAlpha: 0, duration: 0.6, stagger: 0.12 }, 29.6);
+sfx(29.6, 'pop', 0.5);
+tl.to('#mark', { rotation: 360, duration: 1.2, ease: 'expo.inOut' }, 30.4);
+tl.to('#s5 .center', { scale: 1.04, duration: 4.6, ease: 'none' }, 27.4);
+tl.to({}, { duration: 0.01 }, 32.0);
+
+window.DURATION = 32;
+window.SFX = SFX;
+window.seek = (t) => { tl.seek(t, false); };
+window.addEventListener('load', () => { if (location.hash === '#play') tl.play(); });
+</script>
+</body>
+</html>
