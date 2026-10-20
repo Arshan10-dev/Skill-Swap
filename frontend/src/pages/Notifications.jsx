@@ -35,7 +35,6 @@ export default function Notifications() {
               <div className={`stat-icon ${cls}`} style={{ width: 40, height: 40, fontSize: '1.05rem' }}><i className={`bi bi-${ic}`} /></div>
               <div className="flex-grow-1">
                 <div className={n.read ? '' : 'fw-semibold'}>{n.message}</div>
-                <div className="small text-muted">{timeAgo(n.createdAt)}</div>
               </div>
               {!n.read && <span style={{ width: 9, height: 9, borderRadius: '50%', background: 'var(--coral)' }} />}
             </div>
