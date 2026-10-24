@@ -84,6 +84,8 @@ public class SessionService {
         SkillSession s = mine(me, id);
         if (s.getStatus() != Enums.SessionStatus.SCHEDULED)
             throw ApiException.bad("Session is not open");
+        System.out.println("Scheduled time: " + s.getScheduledAt());
+        System.out.println("Backend current time: " + LocalDateTime.now());
         if (s.getScheduledAt().isAfter(LocalDateTime.now()))
             throw ApiException.bad("A session can be marked complete only after its start time");
         s.setStatus(Enums.SessionStatus.COMPLETED);
@@ -103,8 +105,6 @@ public class SessionService {
     @Transactional
     public SessionDto cancel(Long me, Long id) {
         SkillSession s = mine(me, id);
-        System.out.println("Scheduled time: " + s.getScheduledAt());
-        System.out.println("Backend current time: " + LocalDateTime.now());
         if (s.getStatus() != Enums.SessionStatus.SCHEDULED)
             throw ApiException.bad("Session is not open");
         s.setStatus(Enums.SessionStatus.CANCELLED);

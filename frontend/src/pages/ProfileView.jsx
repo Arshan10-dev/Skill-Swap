@@ -1,5 +1,6 @@
 import Avatar from '../components/Avatar.jsx';
-import { Stars, fmtDay, levelLabel, timeAgo, Empty } from '../components/ui.jsx';
+import { Stars, fmtDay, levelLabel, timeAgo } from '../components/ui.jsx';
+
 const DEMO_REVIEWS = [
   {
     id: 'demo-1',
@@ -26,92 +27,236 @@ const DEMO_REVIEWS = [
     comment: 'Great experience. Everything was easy to understand.',
   },
 ];
+
 const badgeIcon = {
-  FIRST_SWAP: 'flag', REGULAR: 'arrow-repeat', VETERAN: 'trophy', FIVE_STAR: 'star', TOP_RATED: 'gem',
-  MULTI_TALENT: 'lightning', FEEDBACK_HERO: 'chat-heart', TRUSTED: 'shield-check',
+  FIRST_SWAP: 'flag',
+  REGULAR: 'arrow-repeat',
+  VETERAN: 'trophy',
+  FIVE_STAR: 'star',
+  TOP_RATED: 'gem',
+  MULTI_TALENT: 'lightning',
+  FEEDBACK_HERO: 'chat-heart',
+  TRUSTED: 'shield-check',
 };
 
-/** Shared read-only profile layout used by my profile and other users' profiles. */
-export default function ProfileView({ p, reviews, actions }) {
+/**
+ * Shared read-only profile layout used by my profile
+ * and other users' profiles.
+ */
+export default function ProfileView({ p, reviews = [], actions }) {
+  // Use demo reviews only when the user has no actual reviews.
+  const useDemoReviews = reviews.length === 0;
+
+  const displayReviews = useDemoReviews ? DEMO_REVIEWS : reviews;
+
+  // Calculate the average rating from the reviews being displayed.
+  const displayRating =
+    displayReviews.length > 0
+      ? displayReviews.reduce(
+          (sum, review) => sum + Number(review.rating || 0),
+          0
+        ) / displayReviews.length
+      : 0;
+
+  const displayReviewCount = displayReviews.length;
+
   return (
     <>
+      {/* Profile header */}
       <div className="profile-hero mb-4">
-        <div className="d-flex gap-4 align-items-center flex-wrap position-relative" style={{ zIndex: 1 }}>
+        <div
+          className="d-flex gap-4 align-items-center flex-wrap position-relative"
+          style={{ zIndex: 1 }}
+        >
           <Avatar name={p.name} size={84} />
+
           <div className="flex-grow-1">
             <h2 className="mb-1">{p.name}</h2>
+
             <div className="small mb-2">
-              <i className="bi bi-geo-alt me-1" />{p.location || 'Location not set'} · Member since {fmtDay(p.memberSince)}
+              <i className="bi bi-geo-alt me-1" />
+              {p.location || 'Location not set'} · Member since{' '}
+              {fmtDay(p.memberSince)}
             </div>
+
             <Stars value={displayRating} />
+
             <div className="small text-muted mt-1">
-              {Number(displayRating || 0).toFixed(1)} / 5 · {displayReviewCount} reviews
-              {reviews.length === 0 && ' · Demo'}
+              {Number(displayRating).toFixed(1)} / 5 · {displayReviewCount}{' '}
+              reviews
+              {useDemoReviews && (
+                <span className="ms-1">· Demo</span>
+              )}
             </div>
           </div>
+
           <div className="d-flex gap-4">
-            <div className="hero-stat"><div className="v">{p.reputation}</div><div className="l">Reputation</div></div>
-            <div className="hero-stat"><div className="v">{p.completedSessions}</div><div className="l">Sessions</div></div>
-            <div className="hero-stat"><div className="v">{p.reviewCount}</div><div className="l">Reviews</div></div>
+            <div className="hero-stat">
+              <div className="v">{p.reputation ?? 0}</div>
+              <div className="l">Reputation</div>
+            </div>
+
+            <div className="hero-stat">
+              <div className="v">{p.completedSessions ?? 0}</div>
+              <div className="l">Sessions</div>
+            </div>
+
+            <div className="hero-stat">
+              <div className="v">{p.reviewCount ?? 0}</div>
+              <div className="l">Reviews</div>
+            </div>
           </div>
-          {actions && <div className="d-flex gap-2 flex-wrap w-100">{actions}</div>}
+
+          {actions && (
+            <div className="d-flex gap-2 flex-wrap w-100">
+              {actions}
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Profile details */}
       <div className="row g-4">
         <div className="col-lg-7">
+          {/* About */}
           <div className="card card-pad mb-4">
             <h6>About</h6>
-            <p className="mb-3">{p.bio || <span className="text-muted">No bio yet.</span>}</p>
+
+            <p className="mb-3">
+              {p.bio || (
+                <span className="text-muted">No bio yet.</span>
+              )}
+            </p>
+
             <div className="d-flex gap-4 flex-wrap small">
-              <div><span className="text-muted">Available:</span> <b>{p.availableDays?.split(',').join(', ') || '–'}</b></div>
-              <div><span className="text-muted">Time:</span> <b>{p.preferredTime ? levelLabel(p.preferredTime) : '–'}</b></div>
-              <div><span className="text-muted">Mode:</span> <b>{p.preferredMode ? levelLabel(p.preferredMode.replace('_', ' ')) : '–'}</b></div>
+              <div>
+                <span className="text-muted">Available:</span>{' '}
+                <b>
+                  {p.availableDays?.split(',').join(', ') || '–'}
+                </b>
+              </div>
+
+              <div>
+                <span className="text-muted">Time:</span>{' '}
+                <b>
+                  {p.preferredTime
+                    ? levelLabel(p.preferredTime)
+                    : '–'}
+                </b>
+              </div>
+
+              <div>
+                <span className="text-muted">Mode:</span>{' '}
+                <b>
+                  {p.preferredMode
+                    ? levelLabel(p.preferredMode.replace('_', ' '))
+                    : '–'}
+                </b>
+              </div>
             </div>
           </div>
+
+          {/* Skills */}
           <div className="card card-pad mb-4">
             <h6>Can teach</h6>
-            <div>{p.teaches.length === 0 ? <div className="text-muted small">None listed</div> : p.teaches.map((s) => (
-              <span key={s.id} className="chip chip-teach">{s.skillName} · {levelLabel(s.level)}{s.yearsExperience ? ` · ${s.yearsExperience}y` : ''}</span>
-            ))}</div>
+
+            <div>
+              {!p.teaches || p.teaches.length === 0 ? (
+                <div className="text-muted small">None listed</div>
+              ) : (
+                p.teaches.map((s) => (
+                  <span key={s.id} className="chip chip-teach">
+                    {s.skillName} · {levelLabel(s.level)}
+                    {s.yearsExperience
+                      ? ` · ${s.yearsExperience}y`
+                      : ''}
+                  </span>
+                ))
+              )}
+            </div>
+
             <h6 className="mt-3">Wants to learn</h6>
-            <div>{p.learns.length === 0 ? <div className="text-muted small">None listed</div> : p.learns.map((s) => (
-              <span key={s.id} className="chip chip-learn">{s.skillName}</span>
-            ))}</div>
+
+            <div>
+              {!p.learns || p.learns.length === 0 ? (
+                <div className="text-muted small">None listed</div>
+              ) : (
+                p.learns.map((s) => (
+                  <span key={s.id} className="chip chip-learn">
+                    {s.skillName}
+                  </span>
+                ))
+              )}
+            </div>
           </div>
+
+          {/* Reviews */}
           <div className="card">
             <div className="card-pad pb-2">
               <h6 className="mb-0">
                 Reviews ({displayReviewCount})
-                {reviews.length === 0 && (
-                  <span className="small text-muted ms-2">Demo</span>
+
+                {useDemoReviews && (
+                  <span className="small text-muted ms-2">
+                    Demo reviews
+                  </span>
                 )}
               </h6>
             </div>
+
             {displayReviews.map((r) => (
               <div className="list-row align-items-start" key={r.id}>
-                <Avatar name={r.reviewer.name} size={38} />
+                <Avatar name={r.reviewer?.name || 'User'} size={38} />
+
                 <div className="flex-grow-1">
                   <div className="d-flex justify-content-between flex-wrap gap-2">
-                    <span className="fw-semibold">{r.reviewer.name}</span>
-                    <span className="small text-muted">{timeAgo(r.createdAt)}</span>
+                    <span className="fw-semibold">
+                      {r.reviewer?.name || 'Anonymous'}
+                    </span>
+
+                    <span className="small text-muted">
+                      {timeAgo(r.createdAt)}
+                    </span>
                   </div>
-                  <Stars value={r.rating} size=".8rem" />
-                  <div className="small text-muted">{r.sessionTitle}</div>
-                  {r.comment && <div className="mt-1">{r.comment}</div>}
+
+                  <Stars value={Number(r.rating || 0)} size=".8rem" />
+
+                  <div className="small text-muted">
+                    {r.sessionTitle || 'Skill Swap Session'}
+                  </div>
+
+                  {r.comment && (
+                    <div className="mt-1">{r.comment}</div>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Badges */}
         <div className="col-lg-5">
           <div className="card card-pad">
             <h6>Badges & achievements</h6>
-            {p.badges.length === 0 ? <div className="text-muted small">Complete sessions and earn reviews to unlock badges.</div> : (
+
+            {!p.badges || p.badges.length === 0 ? (
+              <div className="text-muted small">
+                Complete sessions and earn reviews to unlock badges.
+              </div>
+            ) : (
               <div className="d-grid gap-2">
                 {p.badges.map((b) => (
                   <div className="badge-tile" key={b.code}>
-                    <i className={`bi bi-${badgeIcon[b.code] || 'award'}-fill`} />
-                    <div><div className="fw-bold">{b.name}</div><div className="small text-muted">{b.description}</div></div>
+                    <i
+                      className={`bi bi-${badgeIcon[b.code] || 'award'}-fill`}
+                    />
+
+                    <div>
+                      <div className="fw-bold">{b.name}</div>
+                      <div className="small text-muted">
+                        {b.description}
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
